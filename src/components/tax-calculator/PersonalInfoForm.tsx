@@ -1,10 +1,12 @@
+
 import { useTaxForm } from "@/context/TaxFormContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Mail, Calendar, Briefcase, Globe, UserCircle2, User2, Users, Calculator } from "lucide-react";
+import { Mail, Calendar, Briefcase, Globe } from "lucide-react";
+import { FaMale, FaFemale, FaUser } from 'react-icons/fa';
 
 interface PersonalInfoFormProps {
   onNext: () => void;
@@ -21,10 +23,7 @@ export function PersonalInfoForm({ onNext }: PersonalInfoFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6 bg-gradient-to-br from-white to-purple-50">
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
-          <Calculator className="h-8 w-8 text-purple-600" />
-          Tax Savvy Calculator
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-900">Tax Savvy Calculator</h1>
         <p className="text-lg text-gray-600">
           Let's find out what should be your optimal tax liability
         </p>
@@ -76,9 +75,9 @@ export function PersonalInfoForm({ onNext }: PersonalInfoFormProps) {
           <Label className="flex items-center gap-2">Gender</Label>
           <div className="flex space-x-4">
             {[
-              { value: "male", icon: UserCircle2 },
-              { value: "female", icon: User2 },
-              { value: "other", icon: Users },
+              { value: "male", icon: FaMale },
+              { value: "female", icon: FaFemale },
+              { value: "other", icon: FaUser },
             ].map(({ value, icon: Icon }) => (
               <div
                 key={value}

@@ -1,19 +1,38 @@
 
 import { useTaxForm } from "@/context/TaxFormContext";
 import { Button } from "@/components/ui/button";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
+import { calculateTax } from "@/api/taxCalculator";
+import { toast } from "sonner";
 
 interface TaxResultsProps {
   onPrevious: () => void;
 }
 
 export function TaxResults({ onPrevious }: TaxResultsProps) {
-  const { formData, result } = useTaxForm();
+  const { formData, result, setResult } = useTaxForm();
+  const [isCalculating, setIsCalculating] = useState(false);
 
   const handleCalculate = useCallback(async () => {
-    // TODO: Implement API call to calculate tax
-    console.log("Form data to be sent to API:", formData);
-  }, [formData]);
+    try {
+      setIsCalculating(true);
+      const calculationResult = await calculateTax({
+        ...formData.personalInfo,
+        ...formData.incomeDetails,
+        ...formData.investmentDetails,
+        ...formData.loanDetails,
+        ...formData.investmentGains,
+        ...formData.medicalDetails,
+      });
+      setResult(calculationResult);
+      toast.success("Tax calculation completed successfully");
+    } catch (error) {
+      console.error("Tax calculation error:", error);
+      toast.error("Failed to calculate tax. Please try again.");
+    } finally {
+      setIsCalculating(false);
+    }
+  }, [formData, setResult]);
 
   return (
     <div className="space-y-6">
@@ -29,23 +48,29 @@ export function TaxResults({ onPrevious }: TaxResultsProps) {
           <div className="rounded-lg border p-4">
             <h3 className="text-lg font-semibold">Old Regime</h3>
             <div className="mt-2 space-y-2">
-              <p>Current Tax Liability: ₹{result.oldRegime.currentTaxLiability}</p>
-              <p>Potential Savings: ₹{result.oldRegime.potentialSavings}</p>
-              <p>Optimized Tax Payable: ₹{result.oldRegime.optimizedTaxPayable}</p>
+              <p>Current Tax Liability: ₹{result.oldRegime.currentTaxLiability.toLocaleString()}</p>
+              <p>Potential Savings: ₹{result.oldRegime.potentialSavings.toLocaleString()}</p>
+              <p>Optimized Tax Payable: ₹{result.oldRegime.optimizedTaxPayable.toLocaleString()}</p>
             </div>
           </div>
 
           <div className="rounded-lg border p-4">
             <h3 className="text-lg font-semibold">New Regime</h3>
             <div className="mt-2">
-              <p>Optimized Tax Payable: ₹{result.newRegime.optimizedTaxPayable}</p>
+              <p>Optimized Tax Payable: ₹{result.newRegime.optimizedTaxPayable.toLocaleString()}</p>
             </div>
           </div>
         </div>
       ) : (
         <div className="flex flex-col items-center space-y-4">
           <p>Click calculate to get your tax assessment</p>
-          <Button onClick={handleCalculate}>Calculate Tax</Button>
+          <Button 
+            onClick={handleCalculate} 
+            disabled={isCalculating}
+            className="bg-purple-600 hover:bg-purple-700"
+          >
+            {isCalculating ? "Calculating..." : "Calculate Tax"}
+          </Button>
         </div>
       )}
 
