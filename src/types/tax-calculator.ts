@@ -55,12 +55,29 @@ export interface TaxFormData {
 }
 
 export interface TaxCalculationResult {
-  oldRegime: {
-    currentTaxLiability: number;
-    potentialSavings: number;
-    optimizedTaxPayable: number;
+  optimal_regime: "Old Regime" | "New Regime";
+  old_regime: {
+    tax: number;
+    taxable_income: number;
+    deduction_breakdown: Record<string, {
+      used: number;
+      limit: number | null;
+      remaining_capacity: number | null;
+      estimated_tax_saving_if_fully_used: number;
+      tax_saved_from_used_approx: number;
+    }>;
   };
-  newRegime: {
-    optimizedTaxPayable: number;
+  new_regime: {
+    tax: number;
+    taxable_income: number;
+  };
+  optimization_suggestions: {
+    "80C": { current: number; proposed: number; };
+    "80CCD(1B)": { current: number; proposed: number; };
+    "80D - Health Insurance": { current: number; proposed: number; };
+    recalculated_old_regime?: {
+      taxable_income: number;
+      tax: number;
+    };
   };
 }
