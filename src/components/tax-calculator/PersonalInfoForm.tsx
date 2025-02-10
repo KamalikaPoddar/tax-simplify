@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Mail, Calendar, Briefcase, Globe } from "lucide-react";
+import { Mail, Calendar, Briefcase, Globe, Calculator } from "lucide-react";
 import { FaMale, FaFemale, FaUser } from 'react-icons/fa';
 
 interface PersonalInfoFormProps {
@@ -23,7 +23,10 @@ export function PersonalInfoForm({ onNext }: PersonalInfoFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6 bg-gradient-to-br from-white to-purple-50">
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold text-gray-900">Tax Savvy Calculator</h1>
+        <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
+          <Calculator className="h-8 w-8 text-purple-600" />
+          Tax Savvy Calculator
+        </h1>
         <p className="text-lg text-gray-600">
           Let's find out what should be your optimal tax liability
         </p>
@@ -32,7 +35,7 @@ export function PersonalInfoForm({ onNext }: PersonalInfoFormProps) {
       <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email" className="flex items-center gap-2">
-            <Mail className="h-4 w-4" />
+            <Mail className="h-4 w-4 text-purple-600" />
             Where can I send your personalised report?
           </Label>
           <Input
@@ -53,7 +56,7 @@ export function PersonalInfoForm({ onNext }: PersonalInfoFormProps) {
 
         <div className="space-y-2">
           <Label htmlFor="birthDate" className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
+            <Calendar className="h-4 w-4 text-purple-600" />
             What is your Birth date?
           </Label>
           <Input
@@ -95,7 +98,7 @@ export function PersonalInfoForm({ onNext }: PersonalInfoFormProps) {
               >
                 <Icon
                   className={`h-6 w-6 ${
-                    formData.personalInfo.gender === value ? "text-purple-500" : "text-gray-500"
+                    formData.personalInfo.gender === value ? "text-purple-600" : "text-gray-500"
                   }`}
                 />
               </div>
@@ -105,7 +108,7 @@ export function PersonalInfoForm({ onNext }: PersonalInfoFormProps) {
 
         <div className="space-y-2">
           <Label htmlFor="employmentType" className="flex items-center gap-2">
-            <Briefcase className="h-4 w-4" />
+            <Briefcase className="h-4 w-4 text-purple-600" />
             Please select your employment type
           </Label>
           <Select
@@ -130,7 +133,7 @@ export function PersonalInfoForm({ onNext }: PersonalInfoFormProps) {
 
         <div className="space-y-2">
           <Label htmlFor="residencyCountry" className="flex items-center gap-2">
-            <Globe className="h-4 w-4" />
+            <Globe className="h-4 w-4 text-purple-600" />
             Please select your residency country of last 12 months
           </Label>
           <Select
