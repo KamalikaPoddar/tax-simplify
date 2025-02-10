@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Mail, Calendar, Briefcase, Globe, Male, Female, Transgender, Calculator } from "lucide-react";
+import { Mail, Calendar, Briefcase, Globe, Mars, Venus, Person, Calculator } from "lucide-react";
 
 interface PersonalInfoFormProps {
   onNext: () => void;
@@ -77,9 +77,9 @@ export function PersonalInfoForm({ onNext }: PersonalInfoFormProps) {
           <Label className="flex items-center gap-2">Gender</Label>
           <div className="flex space-x-4">
             {[
-              { value: "male", icon: Male },
-              { value: "female", icon: Female },
-              { value: "other", icon: Transgender },
+              { value: "male", icon: Mars },
+              { value: "female", icon: Venus },
+              { value: "other", icon: Person },
             ].map(({ value, icon: Icon }) => (
               <div
                 key={value}
