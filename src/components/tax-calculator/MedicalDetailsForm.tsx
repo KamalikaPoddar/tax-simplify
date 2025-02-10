@@ -125,4 +125,10 @@ export function MedicalDetailsForm({ onNext, onPrevious }: MedicalDetailsFormPro
         <Button type="button" variant="outline" onClick={onPrevious}>
           Previous
         </Button>
-        <Button type="submit" className="bg-purple
+        <Button type="submit" className="bg-purple-600 hover:bg-purple-700">
+          Next
+        </Button>
+      </div>
+    </form>
+  );
+}
