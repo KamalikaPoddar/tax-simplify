@@ -22,7 +22,7 @@ I have created this when I was planning my tax filing for the FY 25. Please use 
 2.  **Navigate to the project directory:**
 
     ```bash
-    cd calculo-simplify
+    cd tax-simplify
     ```
 3.  **Install dependencies:**
 
