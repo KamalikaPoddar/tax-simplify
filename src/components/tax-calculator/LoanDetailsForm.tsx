@@ -49,7 +49,7 @@ export function LoanDetailsForm({ onNext, onPrevious }: LoanDetailsFormProps) {
         {formData.loanDetails.hasStudentLoan && (
           <div className="space-y-2">
             <Label htmlFor="studentLoanInterest" className="flex items-center gap-2">
-              <IndianRupee className="h-4 w-4" />
+              <IndianRupee className="h-4 w-4 text-purple-600" />
               Annual interest paid
             </Label>
             <Input
@@ -73,7 +73,7 @@ export function LoanDetailsForm({ onNext, onPrevious }: LoanDetailsFormProps) {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="hasHousingLoan" className="flex items-center gap-2">
-              <Home className="h-4 w-4" />
+              <Home className="h-4 w-4 text-purple-600" />
               Are you servicing a home loan?
             </Label>
             <Switch

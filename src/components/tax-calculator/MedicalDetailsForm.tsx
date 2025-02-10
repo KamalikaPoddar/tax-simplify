@@ -55,7 +55,7 @@ export function MedicalDetailsForm({ onNext, onPrevious }: MedicalDetailsFormPro
 
         <div className="space-y-2">
           <Label htmlFor="criticalIllnessExpenses" className="flex items-center gap-2">
-            <HeartPulse className="h-4 w-4" />
+            <HeartPulse className="h-4 w-4 text-purple-600" />
             How much have you paid for treatment of critical illness/disabilities?
           </Label>
           <Input
@@ -78,7 +78,7 @@ export function MedicalDetailsForm({ onNext, onPrevious }: MedicalDetailsFormPro
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="hasDisabledDependents" className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
+              <Users className="h-4 w-4 text-purple-600" />
               Disabled Dependents
             </Label>
             <Switch
