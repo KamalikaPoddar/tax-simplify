@@ -2,7 +2,7 @@
 
 This project is a comprehensive tax calculator that helps users estimate their income tax liability under both the old and new tax regimes in India. It takes into account various factors such as income, age, gender, city, rent, investments, and deductions to provide an accurate tax calculation.
 
-I have created this when I was plannign my tax filing for the FY 25. Please use the generated report as an input to discuss with your Investment advisor/ CA / Tax consultant. 
+I have created this when I was planning my tax filing for the FY 25. Please use the generated report as an input to discuss with your Investment advisor/ CA / Tax consultant. 
 
 ## Technologies Used
 
