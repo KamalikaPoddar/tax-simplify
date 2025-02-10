@@ -48,17 +48,24 @@ export function TaxResults({ onPrevious }: TaxResultsProps) {
           <div className="rounded-lg border p-4">
             <h3 className="text-lg font-semibold">Old Regime</h3>
             <div className="mt-2 space-y-2">
-              <p>Current Tax Liability: ₹{result.oldRegime.currentTaxLiability.toLocaleString()}</p>
-              <p>Potential Savings: ₹{result.oldRegime.potentialSavings.toLocaleString()}</p>
-              <p>Optimized Tax Payable: ₹{result.oldRegime.optimizedTaxPayable.toLocaleString()}</p>
+              <p>Tax: ₹{result.old_regime.tax.toLocaleString()}</p>
+              <p>Taxable Income: ₹{result.old_regime.taxable_income.toLocaleString()}</p>
             </div>
           </div>
 
           <div className="rounded-lg border p-4">
             <h3 className="text-lg font-semibold">New Regime</h3>
             <div className="mt-2">
-              <p>Optimized Tax Payable: ₹{result.newRegime.optimizedTaxPayable.toLocaleString()}</p>
+              <p>Tax: ₹{result.new_regime.tax.toLocaleString()}</p>
+              <p>Taxable Income: ₹{result.new_regime.taxable_income.toLocaleString()}</p>
             </div>
+          </div>
+
+          <div className="rounded-lg border p-4 bg-purple-50">
+            <h3 className="text-lg font-semibold">Recommended Regime</h3>
+            <p className="mt-2 font-medium text-purple-700">
+              {result.optimal_regime}
+            </p>
           </div>
         </div>
       ) : (
