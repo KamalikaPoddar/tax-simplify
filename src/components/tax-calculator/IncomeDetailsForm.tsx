@@ -30,7 +30,7 @@ export function IncomeDetailsForm({ onNext, onPrevious }: IncomeDetailsFormProps
       <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="basicSalary" className="flex items-center gap-2">
-            <IndianRupee className="h-4 w-4" />
+            <IndianRupee className="h-4 w-4 text-purple-600" />
             Basic Salary (Annual)
           </Label>
           <Input
@@ -54,7 +54,7 @@ export function IncomeDetailsForm({ onNext, onPrevious }: IncomeDetailsFormProps
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="hraReceived" className="flex items-center gap-2">
-              <Building className="h-4 w-4" />
+              <Building className="h-4 w-4 text-purple-600"/>
               Do you receive HRA?
             </Label>
             <Switch
@@ -96,7 +96,7 @@ export function IncomeDetailsForm({ onNext, onPrevious }: IncomeDetailsFormProps
 
             <div className="space-y-2">
               <Label htmlFor="cityType" className="flex items-center gap-2">
-                <Home className="h-4 w-4" />
+                <Home className="h-4 w-4 text-purple-600" />
                 City Type
               </Label>
               <Select

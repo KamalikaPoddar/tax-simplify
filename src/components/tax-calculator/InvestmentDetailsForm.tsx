@@ -28,7 +28,7 @@ export function InvestmentDetailsForm({ onNext, onPrevious }: InvestmentDetailsF
       <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="taxSavingInvestments" className="flex items-center gap-2">
-            <PiggyBank className="h-4 w-4" />
+            <PiggyBank className="h-4 w-4 text-purple-600"/>
             How much have you invested in tax saving schemes?
           </Label>
           <Input
@@ -50,7 +50,7 @@ export function InvestmentDetailsForm({ onNext, onPrevious }: InvestmentDetailsF
 
         <div className="space-y-2">
           <Label htmlFor="npsContribution" className="flex items-center gap-2">
-            <Building2 className="h-4 w-4" />
+            <Building2 className="h-4 w-4 text-purple-600" />
             How much have you saved in NPS?
           </Label>
           <Input
@@ -72,7 +72,7 @@ export function InvestmentDetailsForm({ onNext, onPrevious }: InvestmentDetailsF
 
         <div className="space-y-2">
           <Label htmlFor="healthInsurance" className="flex items-center gap-2">
-            <HeartPulse className="h-4 w-4" />
+            <HeartPulse className="h-4 w-4 text-purple-600" />
             What is the total medical insurance you pay for yourself and your dependents?
           </Label>
           <Input

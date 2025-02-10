@@ -1,4 +1,3 @@
-
 import { useTaxForm } from "@/context/TaxFormContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,16 +18,16 @@ export function InvestmentGainsForm({ onNext, onPrevious }: InvestmentGainsFormP
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6 bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-lg shadow-sm">
       <div className="space-y-2">
         <h2 className="text-2xl font-bold">Investment Gains</h2>
         <p className="text-gray-600">Please provide your investment gains information</p>
       </div>
 
       <div className="space-y-4">
-        <div className="space-y-2">
+        <div className="space-y-2 bg-white bg-opacity-50 p-4 rounded-md">
           <Label htmlFor="capitalGains" className="flex items-center gap-2">
-            <Coins className="h-4 w-4" />
+            <Coins className="h-4 w-4 text-purple-600" />
             Have you received any capital gains from your investments?
           </Label>
           <Input
@@ -48,9 +47,9 @@ export function InvestmentGainsForm({ onNext, onPrevious }: InvestmentGainsFormP
           />
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2 bg-white bg-opacity-50 p-4 rounded-md">
           <Label htmlFor="dividends" className="flex items-center gap-2">
-            <Landmark className="h-4 w-4" />
+            <Landmark className="h-4 w-4 text-purple-600" />
             Have you received any dividend payouts from your capital market investments?
           </Label>
           <Input
@@ -70,9 +69,9 @@ export function InvestmentGainsForm({ onNext, onPrevious }: InvestmentGainsFormP
           />
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2 bg-white bg-opacity-50 p-4 rounded-md">
           <Label htmlFor="digitalAssetsSale" className="flex items-center gap-2">
-            <Bitcoin className="h-4 w-4" />
+            <Bitcoin className="h-4 w-4 text-purple-600"/>
             Have you recorded any sale of digital assets?
           </Label>
           <Input
