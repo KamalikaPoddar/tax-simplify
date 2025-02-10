@@ -3,8 +3,9 @@ import { useTaxForm } from "@/context/TaxFormContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { IndianRupee, Building, Home } from "lucide-react";
 
 interface IncomeDetailsFormProps {
   onNext: () => void;
@@ -28,7 +29,10 @@ export function IncomeDetailsForm({ onNext, onPrevious }: IncomeDetailsFormProps
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="basicSalary">Basic Salary (Annual)</Label>
+          <Label htmlFor="basicSalary" className="flex items-center gap-2">
+            <IndianRupee className="h-4 w-4" />
+            Basic Salary (Annual)
+          </Label>
           <Input
             id="basicSalary"
             type="number"
@@ -43,12 +47,16 @@ export function IncomeDetailsForm({ onNext, onPrevious }: IncomeDetailsFormProps
               }))
             }
             required
+            className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
         </div>
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="hraReceived">HRA Received</Label>
+            <Label htmlFor="hraReceived" className="flex items-center gap-2">
+              <Building className="h-4 w-4" />
+              Do you receive HRA?
+            </Label>
             <Switch
               id="hraReceived"
               checked={formData.incomeDetails.hraReceived}
@@ -68,7 +76,7 @@ export function IncomeDetailsForm({ onNext, onPrevious }: IncomeDetailsFormProps
         {formData.incomeDetails.hraReceived && (
           <>
             <div className="space-y-2">
-              <Label htmlFor="hraAmount">HRA Amount</Label>
+              <Label htmlFor="hraAmount">What is the annual HRA you receive?</Label>
               <Input
                 id="hraAmount"
                 type="number"
@@ -82,11 +90,15 @@ export function IncomeDetailsForm({ onNext, onPrevious }: IncomeDetailsFormProps
                     },
                   }))
                 }
+                className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="cityType">City Type</Label>
+              <Label htmlFor="cityType" className="flex items-center gap-2">
+                <Home className="h-4 w-4" />
+                City Type
+              </Label>
               <Select
                 value={formData.incomeDetails.cityType}
                 onValueChange={(value) =>
@@ -113,7 +125,9 @@ export function IncomeDetailsForm({ onNext, onPrevious }: IncomeDetailsFormProps
         <Button type="button" variant="outline" onClick={onPrevious}>
           Previous
         </Button>
-        <Button type="submit">Next</Button>
+        <Button type="submit" className="bg-purple-600 hover:bg-purple-700">
+          Next
+        </Button>
       </div>
     </form>
   );

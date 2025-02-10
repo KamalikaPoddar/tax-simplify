@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Accessibility, HeartPulse, Users } from "lucide-react";
 
 interface MedicalDetailsFormProps {
   onNext: () => void;
@@ -28,7 +29,10 @@ export function MedicalDetailsForm({ onNext, onPrevious }: MedicalDetailsFormPro
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="disabilityStatus">Disability Status</Label>
+          <Label htmlFor="disabilityStatus" className="flex items-center gap-2">
+            <Accessibility className="h-4 w-4" />
+            Do you have any certified medical disabilities?
+          </Label>
           <Select
             value={formData.medicalDetails.disabilityStatus}
             onValueChange={(value) =>
@@ -43,14 +47,17 @@ export function MedicalDetailsForm({ onNext, onPrevious }: MedicalDetailsFormPro
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="None">None</SelectItem>
-              <SelectItem value="Partial">Partial</SelectItem>
-              <SelectItem value="Full">Full</SelectItem>
+              <SelectItem value="Severe">Severe disability, 70-100%</SelectItem>
+              <SelectItem value="Partial">Disability 40-70%</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="criticalIllnessExpenses">Critical Illness Expenses</Label>
+          <Label htmlFor="criticalIllnessExpenses" className="flex items-center gap-2">
+            <HeartPulse className="h-4 w-4" />
+            How much have you paid for treatment of critical illness/disabilities?
+          </Label>
           <Input
             id="criticalIllnessExpenses"
             type="number"
@@ -64,12 +71,16 @@ export function MedicalDetailsForm({ onNext, onPrevious }: MedicalDetailsFormPro
                 },
               }))
             }
+            className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
         </div>
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="hasDisabledDependents">Disabled Dependents</Label>
+            <Label htmlFor="hasDisabledDependents" className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              Disabled Dependents
+            </Label>
             <Switch
               id="hasDisabledDependents"
               checked={formData.medicalDetails.hasDisabledDependents}
@@ -88,7 +99,9 @@ export function MedicalDetailsForm({ onNext, onPrevious }: MedicalDetailsFormPro
 
         {formData.medicalDetails.hasDisabledDependents && (
           <div className="space-y-2">
-            <Label htmlFor="dependentMedicalExpenses">Dependent Medical Expenses</Label>
+            <Label htmlFor="dependentMedicalExpenses">
+              How much have you paid for your dependent's critical illness/disability?
+            </Label>
             <Input
               id="dependentMedicalExpenses"
               type="number"
@@ -102,6 +115,7 @@ export function MedicalDetailsForm({ onNext, onPrevious }: MedicalDetailsFormPro
                   },
                 }))
               }
+              className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
           </div>
         )}
@@ -111,8 +125,4 @@ export function MedicalDetailsForm({ onNext, onPrevious }: MedicalDetailsFormPro
         <Button type="button" variant="outline" onClick={onPrevious}>
           Previous
         </Button>
-        <Button type="submit">Next</Button>
-      </div>
-    </form>
-  );
-}
+        <Button type="submit" className="bg-purple

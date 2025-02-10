@@ -3,7 +3,7 @@ import { useTaxForm } from "@/context/TaxFormContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Coins, Landmark, Bitcoin } from "lucide-react";
 
 interface InvestmentGainsFormProps {
   onNext: () => void;
@@ -27,43 +27,32 @@ export function InvestmentGainsForm({ onNext, onPrevious }: InvestmentGainsFormP
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="capitalGains">Capital Gains</Label>
+          <Label htmlFor="savingsInterest" className="flex items-center gap-2">
+            <Coins className="h-4 w-4" />
+            Have you received any interest from your savings investments?
+          </Label>
           <Input
-            id="capitalGains"
+            id="savingsInterest"
             type="number"
-            value={formData.investmentGains.capitalGains}
+            value={formData.investmentGains.savingsInterest}
             onChange={(e) =>
               setFormData((prev) => ({
                 ...prev,
                 investmentGains: {
                   ...prev.investmentGains,
-                  capitalGains: Number(e.target.value),
+                  savingsInterest: Number(e.target.value),
                 },
               }))
             }
+            className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="gainsAmount">Gains Amount</Label>
-          <Input
-            id="gainsAmount"
-            type="number"
-            value={formData.investmentGains.gainsAmount}
-            onChange={(e) =>
-              setFormData((prev) => ({
-                ...prev,
-                investmentGains: {
-                  ...prev.investmentGains,
-                  gainsAmount: Number(e.target.value),
-                },
-              }))
-            }
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="dividends">Dividends</Label>
+          <Label htmlFor="dividends" className="flex items-center gap-2">
+            <Landmark className="h-4 w-4" />
+            Have you received any dividend payouts from your capital market investments?
+          </Label>
           <Input
             id="dividends"
             type="number"
@@ -77,33 +66,15 @@ export function InvestmentGainsForm({ onNext, onPrevious }: InvestmentGainsFormP
                 },
               }))
             }
+            className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="investmentType">Investment Type</Label>
-          <Select
-            value={formData.investmentGains.investmentType}
-            onValueChange={(value) =>
-              setFormData((prev) => ({
-                ...prev,
-                investmentGains: { ...prev.investmentGains, investmentType: value },
-              }))
-            }
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select investment type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="equity">Equity</SelectItem>
-              <SelectItem value="debt">Debt</SelectItem>
-              <SelectItem value="hybrid">Hybrid</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="digitalAssetsSale">Digital Assets Sale</Label>
+          <Label htmlFor="digitalAssetsSale" className="flex items-center gap-2">
+            <Bitcoin className="h-4 w-4" />
+            Have you recorded any sale of digital assets?
+          </Label>
           <Input
             id="digitalAssetsSale"
             type="number"
@@ -117,6 +88,7 @@ export function InvestmentGainsForm({ onNext, onPrevious }: InvestmentGainsFormP
                 },
               }))
             }
+            className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
         </div>
       </div>
@@ -125,7 +97,9 @@ export function InvestmentGainsForm({ onNext, onPrevious }: InvestmentGainsFormP
         <Button type="button" variant="outline" onClick={onPrevious}>
           Previous
         </Button>
-        <Button type="submit">Next</Button>
+        <Button type="submit" className="bg-purple-600 hover:bg-purple-700">
+          Next
+        </Button>
       </div>
     </form>
   );

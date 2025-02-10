@@ -3,7 +3,7 @@ import { useTaxForm } from "@/context/TaxFormContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PiggyBank, Building2, HeartPulse } from "lucide-react";
 
 interface InvestmentDetailsFormProps {
   onNext: () => void;
@@ -27,8 +27,9 @@ export function InvestmentDetailsForm({ onNext, onPrevious }: InvestmentDetailsF
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="taxSavingInvestments">
-            Tax Saving Investments (80C - PPF, ELSS, etc.)
+          <Label htmlFor="taxSavingInvestments" className="flex items-center gap-2">
+            <PiggyBank className="h-4 w-4" />
+            How much have you invested in tax saving schemes?
           </Label>
           <Input
             id="taxSavingInvestments"
@@ -43,29 +44,37 @@ export function InvestmentDetailsForm({ onNext, onPrevious }: InvestmentDetailsF
                 },
               }))
             }
+            className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="npsContribution">NPS Contribution</Label>
+          <Label htmlFor="npsContribution" className="flex items-center gap-2">
+            <Building2 className="h-4 w-4" />
+            How much have you saved in NPS?
+          </Label>
           <Input
             id="npsContribution"
-            type="text"
+            type="number"
             value={formData.investmentDetails.npsContribution}
             onChange={(e) =>
               setFormData((prev) => ({
                 ...prev,
                 investmentDetails: {
                   ...prev.investmentDetails,
-                  npsContribution: e.target.value,
+                  npsContribution: Number(e.target.value),
                 },
               }))
             }
+            className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="healthInsurance">Health Insurance Premium</Label>
+          <Label htmlFor="healthInsurance" className="flex items-center gap-2">
+            <HeartPulse className="h-4 w-4" />
+            What is the total medical insurance you pay for yourself and your dependents?
+          </Label>
           <Input
             id="healthInsurance"
             type="number"
@@ -79,6 +88,7 @@ export function InvestmentDetailsForm({ onNext, onPrevious }: InvestmentDetailsF
                 },
               }))
             }
+            className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
         </div>
       </div>
@@ -87,7 +97,9 @@ export function InvestmentDetailsForm({ onNext, onPrevious }: InvestmentDetailsF
         <Button type="button" variant="outline" onClick={onPrevious}>
           Previous
         </Button>
-        <Button type="submit">Next</Button>
+        <Button type="submit" className="bg-purple-600 hover:bg-purple-700">
+          Next
+        </Button>
       </div>
     </form>
   );
