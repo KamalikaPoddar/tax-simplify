@@ -27,20 +27,20 @@ export function InvestmentGainsForm({ onNext, onPrevious }: InvestmentGainsFormP
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="savingsInterest" className="flex items-center gap-2">
+          <Label htmlFor="capitalGains" className="flex items-center gap-2">
             <Coins className="h-4 w-4" />
-            Have you received any interest from your savings investments?
+            Have you received any capital gains from your investments?
           </Label>
           <Input
-            id="savingsInterest"
+            id="capitalGains"
             type="number"
-            value={formData.investmentGains.savingsInterest}
+            value={formData.investmentGains.capitalGains}
             onChange={(e) =>
               setFormData((prev) => ({
                 ...prev,
                 investmentGains: {
                   ...prev.investmentGains,
-                  savingsInterest: Number(e.target.value),
+                  capitalGains: Number(e.target.value),
                 },
               }))
             }

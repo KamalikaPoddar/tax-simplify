@@ -111,25 +111,6 @@ export function LoanDetailsForm({ onNext, onPrevious }: LoanDetailsFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="housingLoanAmount">What was the total loan amount?</Label>
-              <Input
-                id="housingLoanAmount"
-                type="number"
-                value={formData.loanDetails.housingLoanAmount}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    loanDetails: {
-                      ...prev.loanDetails,
-                      housingLoanAmount: Number(e.target.value),
-                    },
-                  }))
-                }
-                className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-              />
-            </div>
-
-            <div className="space-y-2">
               <Label htmlFor="housingLoanInterest">What is your annual interest paid?</Label>
               <Input
                 id="housingLoanInterest"

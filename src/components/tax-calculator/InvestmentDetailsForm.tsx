@@ -62,7 +62,7 @@ export function InvestmentDetailsForm({ onNext, onPrevious }: InvestmentDetailsF
                 ...prev,
                 investmentDetails: {
                   ...prev.investmentDetails,
-                  npsContribution: Number(e.target.value),
+                  npsContribution: e.target.value, // Changed to string to match type
                 },
               }))
             }
