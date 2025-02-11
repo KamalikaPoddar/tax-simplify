@@ -20,7 +20,7 @@ export function LoanDetailsForm({ onNext, onPrevious }: LoanDetailsFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6 bg-gradient-to-br from-white to-purple-50 p-6 rounded-lg shadow-sm">
       <div className="space-y-2">
         <h2 className="text-2xl font-bold">Loan Details</h2>
         <p className="text-gray-600">Please provide your loan related information</p>
@@ -30,7 +30,7 @@ export function LoanDetailsForm({ onNext, onPrevious }: LoanDetailsFormProps) {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="hasStudentLoan" className="flex items-center gap-2">
-              <GraduationCap className="h-4 w-4" />
+              <GraduationCap className="h-4 w-4 text-purple-600" />
               Are you servicing any education loans?
             </Label>
             <Switch
@@ -50,7 +50,7 @@ export function LoanDetailsForm({ onNext, onPrevious }: LoanDetailsFormProps) {
           <div className="space-y-2">
             <Label htmlFor="studentLoanInterest" className="flex items-center gap-2">
               <IndianRupee className="h-4 w-4 text-purple-600" />
-              Annual interest paid
+              What is your annual interest paid?
             </Label>
             <Input
               id="studentLoanInterest"

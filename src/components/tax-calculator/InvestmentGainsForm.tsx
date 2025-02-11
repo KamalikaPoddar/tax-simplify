@@ -18,7 +18,7 @@ export function InvestmentGainsForm({ onNext, onPrevious }: InvestmentGainsFormP
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-lg shadow-sm">
+    <form onSubmit={handleSubmit} className="space-y-6 bg-gradient-to-br from-white to-purple-50 p-6 rounded-lg shadow-sm">
       <div className="space-y-2">
         <h2 className="text-2xl font-bold">Investment Gains</h2>
         <p className="text-gray-600">Please provide your investment gains information</p>

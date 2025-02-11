@@ -21,7 +21,7 @@ export function IncomeDetailsForm({ onNext, onPrevious }: IncomeDetailsFormProps
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6 bg-gradient-to-br from-white to-purple-50 p-6 rounded-lg shadow-sm">
       <div className="space-y-2">
         <h2 className="text-2xl font-bold">Income Details</h2>
         <p className="text-gray-600">Please provide your income related information</p>
@@ -31,7 +31,7 @@ export function IncomeDetailsForm({ onNext, onPrevious }: IncomeDetailsFormProps
         <div className="space-y-2">
           <Label htmlFor="basicSalary" className="flex items-center gap-2">
             <IndianRupee className="h-4 w-4 text-purple-600" />
-            Basic Salary (Annual)
+            What is your AnnualBasic Salary?
           </Label>
           <Input
             id="basicSalary"
@@ -55,7 +55,7 @@ export function IncomeDetailsForm({ onNext, onPrevious }: IncomeDetailsFormProps
           <div className="flex items-center justify-between">
             <Label htmlFor="hraReceived" className="flex items-center gap-2">
               <Building className="h-4 w-4 text-purple-600"/>
-              Do you receive HRA?
+              Do you receive Housing Rent Allowance?
             </Label>
             <Switch
               id="hraReceived"
@@ -97,7 +97,7 @@ export function IncomeDetailsForm({ onNext, onPrevious }: IncomeDetailsFormProps
             <div className="space-y-2">
               <Label htmlFor="cityType" className="flex items-center gap-2">
                 <Home className="h-4 w-4 text-purple-600" />
-                City Type
+                What is your City Type?
               </Label>
               <Select
                 value={formData.incomeDetails.cityType}

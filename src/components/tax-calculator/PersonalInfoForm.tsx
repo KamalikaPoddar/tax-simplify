@@ -21,7 +21,7 @@ export function PersonalInfoForm({ onNext }: PersonalInfoFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 bg-gradient-to-br from-white to-purple-50">
+    <form onSubmit={handleSubmit} className="space-y-6 bg-gradient-to-br from-white to-purple-50 p-6 rounded-lg shadow-sm">
       <div className="space-y-2">
         <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
           <Calculator className="h-8 w-8 text-purple-600" />
@@ -134,7 +134,7 @@ export function PersonalInfoForm({ onNext }: PersonalInfoFormProps) {
         <div className="space-y-2">
           <Label htmlFor="residencyCountry" className="flex items-center gap-2">
             <Globe className="h-4 w-4 text-purple-600" />
-            Please select your residency country of last 12 months
+            Please select your country of residence for the past 12 months
           </Label>
           <Select
             value={formData.personalInfo.residencyCountry}
@@ -169,7 +169,7 @@ export function PersonalInfoForm({ onNext }: PersonalInfoFormProps) {
               }))
             }
           />
-          <Label htmlFor="dependentParents">Do you have dependent senior parents?</Label>
+          <Label htmlFor="dependentParents">Do you have dependent senior citizens?</Label>
         </div>
       </div>
 

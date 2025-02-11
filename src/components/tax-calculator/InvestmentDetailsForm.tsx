@@ -18,7 +18,7 @@ export function InvestmentDetailsForm({ onNext, onPrevious }: InvestmentDetailsF
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6 bg-gradient-to-br from-white to-purple-50 p-6 rounded-lg shadow-sm">
       <div className="space-y-2">
         <h2 className="text-2xl font-bold">Investment Details</h2>
         <p className="text-gray-600">Please provide your investment related information</p>
@@ -50,7 +50,7 @@ export function InvestmentDetailsForm({ onNext, onPrevious }: InvestmentDetailsF
         <div className="space-y-2">
           <Label htmlFor="npsContribution" className="flex items-center gap-2">
             <Building2 className="h-4 w-4 text-purple-600" />
-            How much have you saved in NPS?
+            How much have you saved in National Pension Scheme (NPS)?
           </Label>
           <Input
             id="npsContribution"
