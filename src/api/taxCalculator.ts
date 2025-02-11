@@ -87,30 +87,41 @@ function mapFormDataToRequest(formData: any): TaxCalculationRequest {
   const currentDate = new Date();
   const age = currentDate.getFullYear() - birthDate.getFullYear();
 
+  // Ensure numeric values
+  const income = Number(formData.incomeDetails.basicSalary) || 0;
+  const basic_salary = Number(formData.incomeDetails.basicSalary) || 0;
+  const hra_amount = Number(formData.incomeDetails.hraAmount) || 0;
+  const taxSavingInvestments = Number(formData.investmentDetails.taxSavingInvestments) || 0;
+  const npsContribution = Number(formData.investmentDetails.npsContribution) || 0;
+  const healthInsurance = Number(formData.investmentDetails.healthInsurance) || 0;
+  const housingLoanInterest = Number(formData.loanDetails.housingLoanInterest) || 0;
+  const studentLoanInterest = Number(formData.loanDetails.studentLoanInterest) || 0;
+  const criticalIllnessExpenses = Number(formData.medicalDetails.criticalIllnessExpenses) || 0;
+
   return {
-    income: formData.incomeDetails.basicSalary,
+    income,
     age,
     gender: formData.personalInfo.gender,
     city: formData.incomeDetails.cityType,
-    rent: 0, // Add this to your form if needed
+    rent: 0,
     has_hra: formData.incomeDetails.hraReceived,
-    basic_salary: formData.incomeDetails.basicSalary,
-    hra_received: formData.incomeDetails.hraAmount,
+    basic_salary,
+    hra_received: hra_amount,
     property_self_occupied: formData.loanDetails.isSelfOccupied,
-    home_loan_interest: formData.loanDetails.housingLoanInterest,
-    home_loan_principal_80c: 0, // Add this to your form if needed
-    sec_80ee: false, // Add this to your form if needed
-    sec_80eea: false, // Add this to your form if needed
-    total_80c_investments: formData.investmentDetails.taxSavingInvestments,
-    nps_80ccd_1b: formData.investmentDetails.npsContribution || 0,
-    health_insurance_self_parents: formData.investmentDetails.healthInsurance,
+    home_loan_interest: housingLoanInterest,
+    home_loan_principal_80c: 0,
+    sec_80ee: false,
+    sec_80eea: false,
+    total_80c_investments: taxSavingInvestments,
+    nps_80ccd_1b: npsContribution,
+    health_insurance_self_parents: healthInsurance,
     is_disabled_self: formData.medicalDetails.disabilityStatus !== "None",
     is_disabled_dependent: formData.medicalDetails.hasDisabledDependents,
     severe_disability_self: formData.medicalDetails.disabilityStatus === "Severe",
-    severe_disability_dep: false, // Add this to your form if needed
-    critical_illness_bills: formData.medicalDetails.criticalIllnessExpenses,
-    student_loan_interest: formData.loanDetails.studentLoanInterest,
-    donations_80g: 0, // Add this to your form if needed
+    severe_disability_dep: false,
+    critical_illness_bills: criticalIllnessExpenses,
+    student_loan_interest: studentLoanInterest,
+    donations_80g: 0,
     royalty_income_80rrb: 0,
     is_startup_investments: false,
     startup_investments_80iac: 0,
@@ -131,7 +142,8 @@ function mapFormDataToRequest(formData: any): TaxCalculationRequest {
 export async function calculateTax(formData: any): Promise<TaxCalculationResponse> {
   try {
     const requestData = mapFormDataToRequest(formData);
-    console.log('Tax calculation request data:', requestData);
+    console.log('Raw form data:', formData);
+    console.log('Mapped request data:', requestData);
 
     // Make the API call to your Python backend
     const response = await fetch('http://localhost:5000/api/calculateTax', {
@@ -143,6 +155,8 @@ export async function calculateTax(formData: any): Promise<TaxCalculationRespons
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Server error response:', errorText);
       throw new Error('Failed to calculate tax');
     }
 

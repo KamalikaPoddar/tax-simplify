@@ -1,4 +1,3 @@
-
 export interface PersonalInfo {
   email: string;
   birthDate: string;
@@ -17,7 +16,7 @@ export interface IncomeDetails {
 
 export interface InvestmentDetails {
   taxSavingInvestments: number;
-  npsContribution: string;
+  npsContribution: number;
   healthInsurance: number;
 }
 

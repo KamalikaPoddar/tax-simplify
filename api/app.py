@@ -392,6 +392,57 @@ def calculate_new_regime_tax(
     return round(total_tax,2), round(ti,2)
 
 
+def calculate_80d_deduction(age, health_insurance_self, health_checkup_self,
+                             age_parents, health_insurance_parents, health_checkup_parents):
+    """
+    Calculates the eligible deduction under Section 80D for health insurance and health checkups.
+
+    Args:
+        age (int): Age of the taxpayer.
+        health_insurance_self (float): Premium paid for health insurance for self, spouse, and dependent children.
+        health_checkup_self (float): Expenses on preventive health checkups for self, spouse, and dependent children.
+        age_parents (int): Age of parents (enter 0 if no claim for parents is made).
+        health_insurance_parents (float): Premium paid for health insurance for parents.
+        health_checkup_parents (float): Expenses on preventive health checkups for parents.
+
+    Returns:
+        float: Total eligible deduction under Section 80D.
+    """
+
+    total_deduction = 0.0
+
+    # Self, Spouse, and Dependent Children
+    max_deduction_self = 25000.0 if age < 60 else 50000.0  # Limit for self, spouse and dependent children
+    max_checkup_self = 5000.0  # Combined limit for health checkups (within the overall limit)
+    
+    eligible_health_insurance_self = min(health_insurance_self, max_deduction_self)
+    
+    # Health checkup limit applies to both insurance premium and checkup expenses together.
+    # Ensure total checkup + insurance deduction doesn't exceed max limit and health checkup doesn't exceed checkup limit
+    eligible_health_checkup_self = min(health_checkup_self, max_checkup_self) # Apply individual limit
+    if eligible_health_insurance_self + eligible_health_checkup_self > max_deduction_self:
+      eligible_health_checkup_self = max(0, max_deduction_self - eligible_health_insurance_self) # Adjust to comply with the max deduction
+
+
+    total_deduction += eligible_health_insurance_self + eligible_health_checkup_self
+
+
+    # Parents
+    if age_parents > 0:  # Only consider if there's a claim for parents.
+        max_deduction_parents = 25000.0 if age_parents < 60 else 50000.0  # Limit for parents
+
+        max_checkup_parents = 5000.0  #Combined Limit for parents
+        eligible_health_insurance_parents = min(health_insurance_parents, max_deduction_parents)
+        
+        eligible_health_checkup_parents = min(health_checkup_parents, max_checkup_parents) #Apply checkup limit
+        if eligible_health_insurance_parents + eligible_health_checkup_parents > max_deduction_parents:
+            eligible_health_checkup_parents = max(0, max_deduction_parents - eligible_health_insurance_parents)
+
+        total_deduction += eligible_health_insurance_parents + eligible_health_checkup_parents
+
+    return total_deduction
+
+
 def run_tax_calculator():
     """
     Prompts user, does calculations, 
@@ -539,15 +590,24 @@ def run_tax_calculator():
 def calculate_tax():
     try:
         data = request.json
+        print("Received data:", data)  # Debug print
         
         # Calculate deductions
         deductions = {
             '80C': min(data.get('total_80c_investments', 0), 150000),
             '80CCD(1B)': min(data.get('nps_80ccd_1b', 0), 50000),
-            '80D': min(data.get('health_insurance_self_parents', 0), 75000),
+            '80D': calculate_80d_deduction(
+                age=data['age'],
+                health_insurance_self=data.get('health_insurance_self', 0),
+                health_checkup_self=data.get('health_checkup_self', 0),
+                age_parents=data.get('age_parents', 0),
+                health_insurance_parents=data.get('health_insurance_parents', 0),
+                health_checkup_parents=data.get('health_checkup_parents', 0)
+            ),
             'Home Loan Interest': data.get('home_loan_interest', 0),
             'Student Loan Interest': data.get('student_loan_interest', 0)
         }
+        print("Calculated deductions:", deductions)  # Debug print
         
         # Calculate taxes under both regimes
         old_tax, old_ti, old_breakdown = calculate_old_regime_tax(
@@ -585,11 +645,13 @@ def calculate_tax():
             savings_interest_80tta=data['savings_interest_80tta'],
             interest_income_80ttb=data['interest_income_80ttb']
         )
+        print("Calculated old regime tax:", old_tax, old_ti, old_breakdown)  # Debug print
         new_tax, new_ti = calculate_new_regime_tax(
             income=data['income'],
             gender=data['gender'],
             basic_salary=data['basic_salary']
         )
+        print("Calculated new regime tax:", new_tax, new_ti)  # Debug print
         
         # Determine optimal regime
         optimal_regime = "Old Regime" if old_tax < new_tax else "New Regime"

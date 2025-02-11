@@ -1,4 +1,3 @@
-
 import { useTaxForm } from "@/context/TaxFormContext";
 import { Button } from "@/components/ui/button";
 import { useCallback, useState } from "react";
@@ -16,14 +15,7 @@ export function TaxResults({ onPrevious }: TaxResultsProps) {
   const handleCalculate = useCallback(async () => {
     try {
       setIsCalculating(true);
-      const calculationResult = await calculateTax({
-        ...formData.personalInfo,
-        ...formData.incomeDetails,
-        ...formData.investmentDetails,
-        ...formData.loanDetails,
-        ...formData.investmentGains,
-        ...formData.medicalDetails,
-      });
+      const calculationResult = await calculateTax(formData);
       setResult(calculationResult);
       toast.success("Tax calculation completed successfully");
     } catch (error) {

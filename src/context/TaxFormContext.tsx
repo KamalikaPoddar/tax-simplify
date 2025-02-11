@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState } from "react";
 import { TaxFormData, TaxCalculationResult } from "@/types/tax-calculator";
 
@@ -27,7 +26,7 @@ const defaultFormData: TaxFormData = {
   },
   investmentDetails: {
     taxSavingInvestments: 0,
-    npsContribution: "",
+    npsContribution: 0,
     healthInsurance: 0,
   },
   loanDetails: {
