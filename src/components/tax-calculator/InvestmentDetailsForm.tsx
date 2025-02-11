@@ -1,4 +1,3 @@
-
 import { useTaxForm } from "@/context/TaxFormContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -62,7 +61,7 @@ export function InvestmentDetailsForm({ onNext, onPrevious }: InvestmentDetailsF
                 ...prev,
                 investmentDetails: {
                   ...prev.investmentDetails,
-                  npsContribution: e.target.value, // Changed to string to match type
+                  npsContribution: Number(e.target.value),
                 },
               }))
             }

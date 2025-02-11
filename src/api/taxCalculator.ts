@@ -1,4 +1,3 @@
-
 interface TaxCalculationRequest {
   // Income and Basic Info
   income: number;
@@ -103,7 +102,7 @@ function mapFormDataToRequest(formData: any): TaxCalculationRequest {
     sec_80ee: false, // Add this to your form if needed
     sec_80eea: false, // Add this to your form if needed
     total_80c_investments: formData.investmentDetails.taxSavingInvestments,
-    nps_80ccd_1b: parseFloat(formData.investmentDetails.npsContribution) || 0,
+    nps_80ccd_1b: formData.investmentDetails.npsContribution || 0,
     health_insurance_self_parents: formData.investmentDetails.healthInsurance,
     is_disabled_self: formData.medicalDetails.disabilityStatus !== "None",
     is_disabled_dependent: formData.medicalDetails.hasDisabledDependents,
