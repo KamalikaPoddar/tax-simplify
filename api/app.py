@@ -574,6 +574,34 @@ def run_tax_calculator():
             else:
                 print(f" - {key}: Used ₹{used} (no statutory limit). Approx tax saved so far ~₹{tax_saved_from_used}.")
         print("\n**If you have more capacity** to invest or spend in the above categories, you can further reduce your tax under the Old Regime.")
+
+        total_potential_tax_saving = 0.0
+        for key, val in old_breakdown.items():
+            estimated_tax_saving = val['estimated_tax_saving_if_fully_used']
+            total_potential_tax_saving += estimated_tax_saving
+
+        optimal_old_tax = round(old_tax - total_potential_tax_saving, 2)
+
+        print(f"\nPotential Tax Savings from Fully Utilizing Deductions: ₹{round(total_potential_tax_saving, 2)}")
+        print(f"Optimal Old Regime Tax (If Fully Optimized): ₹{optimal_old_tax}")
+
+        print("\n**Conclusion**: Old Regime is cheaper!")
+        saved = round(new_tax - optimal_old_tax, 2)
+        print(f"You save about ₹{saved} compared to New Regime.")
+
+        # Provide DETAILED breakdown for the Old Regime
+        print("\n===== Old Regime Detailed Deductions & Optimization =====")
+        for key, val in old_breakdown.items():
+            used = val['used']
+            lim = val['limit']
+            remain = val['remaining_capacity']
+            est_saving = val['estimated_tax_saving_if_fully_used']
+            tax_saved_from_used = val['tax_saved_from_used_approx']
+            if lim:
+                print(f" - {key}: Used ₹{used} of limit ₹{lim}. You can still invest/spend ₹{remain} more here, potentially saving ~₹{est_saving} additional tax.")
+            else:
+                print(f" - {key}: Used ₹{used} (no statutory limit). Approx tax saved so far ~₹{tax_saved_from_used}.")
+        print("\n**If you have more capacity** to invest or spend in the above categories, you can further reduce your tax under the Old Regime.")
     elif new_tax < old_tax:
         print("\n**Conclusion**: New Regime is cheaper!")
         saved = round(old_tax - new_tax,2)

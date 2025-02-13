@@ -20,6 +20,8 @@ interface TaxCalculationRequest {
   total_80c_investments: number;
   nps_80ccd_1b: number;
   health_insurance_self_parents: number;
+  startup_investments_80iac: number;
+  deduction_from_scientific_research: number;
 
   // Disability and Medical
   is_disabled_self: boolean;

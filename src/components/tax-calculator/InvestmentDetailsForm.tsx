@@ -2,7 +2,7 @@ import { useTaxForm } from "@/context/TaxFormContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { PiggyBank, Building2, HeartPulse } from "lucide-react";
+import { PiggyBank, Building2, HeartPulse, RocketIcon, Microscope, MicroscopeIcon } from "lucide-react";
 
 interface InvestmentDetailsFormProps {
   onNext: () => void;
@@ -84,6 +84,50 @@ export function InvestmentDetailsForm({ onNext, onPrevious }: InvestmentDetailsF
                 investmentDetails: {
                   ...prev.investmentDetails,
                   healthInsurance: Number(e.target.value),
+                },
+              }))
+            }
+            className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="startup_investments_80iac" className="flex items-center gap-2">
+            <RocketIcon className="h-4 w-4 text-purple-600"/>
+            Have you angel invested in new age startups? If so, How much?
+          </Label>
+          <Input
+            id="startup_investments_80iac"
+            type="number"
+            value={formData.investmentDetails.startup_investments_80iac}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                investmentDetails: {
+                  ...prev.investmentDetails,
+                  startup_investments_80iac: Number(e.target.value),
+                },
+              }))
+            }
+            className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="deduction_from_scientific_research" className="flex items-center gap-2">
+            <Microscope className="h-4 w-4 text-purple-600"/>
+            How much have you donated towards scientific research associations, universities, colleges?
+          </Label>
+          <Input
+            id="deduction_from_scientific_research"
+            type="number"
+            value={formData.investmentDetails.deduction_from_scientific_research}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                investmentDetails: {
+                  ...prev.investmentDetails,
+                  deduction_from_scientific_research: Number(e.target.value),
                 },
               }))
             }
