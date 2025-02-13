@@ -1,0 +1,115 @@
+{
+    "tax_slabs": {
+      "2023-24": {
+        "old_regime": [
+          { "limit": 250000, "rate": 0.0 },
+          { "limit": 500000, "rate": 0.05 },
+          { "limit": 1000000, "rate": 0.20 },
+          { "limit": null, "rate": 0.30 }
+        ],
+        "new_regime": [
+          { "limit": 300000, "rate": 0.0 },
+          { "limit": 600000, "rate": 0.05 },
+          { "limit": 900000, "rate": 0.10 },
+          { "limit": 1200000, "rate": 0.15 },
+          { "limit": 1500000, "rate": 0.20 },
+          { "limit": 1800000, "rate": 0.25},
+          { "limit": null, "rate": 0.30 }
+        ],
+        "senior_citizen": {
+          "old_regime": [
+            { "limit": 300000, "rate": 0.0 },
+            { "limit": 500000, "rate": 0.05 },
+            { "limit": 1000000, "rate": 0.20 },
+            { "limit": null, "rate": 0.30 }
+          ]
+        },
+        "super_senior_citizen":{
+          "old_regime": [
+            { "limit": 500000, "rate": 0.0 },
+            { "limit": 1000000, "rate": 0.20 },
+            { "limit": null, "rate": 0.30 }
+          ]
+        }
+      },
+      "2024-25": {
+        "old_regime": [  // Example for the next assessment year
+          { "limit": 250000, "rate": 0.0 },
+          { "limit": 500000, "rate": 0.05 },
+          { "limit": 1000000, "rate": 0.20 },
+          { "limit": null, "rate": 0.30 }
+        ],
+        "new_regime": [
+          { "limit": 300000, "rate": 0.0 },
+          { "limit": 600000, "rate": 0.05 },
+          { "limit": 900000, "rate": 0.10 },
+          { "limit": 1200000, "rate": 0.15 },
+          { "limit": 1500000, "rate": 0.20 },
+          { "limit": 1800000, "rate": 0.25},
+          { "limit": null, "rate": 0.30 }
+        ],
+        "senior_citizen": {
+          "old_regime": [
+            { "limit": 300000, "rate": 0.0 },
+            { "limit": 500000, "rate": 0.05 },
+            { "limit": 1000000, "rate": 0.20 },
+            { "limit": null, "rate": 0.30 }
+          ]
+        },
+        "super_senior_citizen":{
+          "old_regime": [
+            { "limit": 500000, "rate": 0.0 },
+            { "limit": 1000000, "rate": 0.20 },
+            { "limit": null, "rate": 0.30 }
+          ]
+        }
+      }
+    },
+    "surcharge_rates": {
+      "2023-24": {
+        "50000000": 0.37,
+        "20000000": 0.25,
+        "10000000": 0.15,
+        "5000000": 0.10
+      },
+      "2024-25": {
+        "50000000": 0.37,
+        "20000000": 0.25,
+        "10000000": 0.15,
+        "5000000": 0.10
+      }
+    },
+    "rebate_87a": {
+      "2023-24": {
+        "limit": 12500,
+        "income_threshold": 500000
+      },
+      "2024-25": {
+        "limit": 12500,
+        "income_threshold": 500000
+      }
+    },
+    "standard_deduction":{
+      "2023-24": 50000,
+      "2024-25": 50000
+    },
+    "80D": {
+      "2023-24": {
+        "self": 25000,
+        "senior_citizen": 50000
+      },
+      "2024-25": {
+        "self": 25000,
+        "senior_citizen": 50000
+      }
+    },
+    "city_classification":{
+      "metro": ["delhi", "mumbai", "kolkata", "chennai"],
+      "non-metro": []
+    },
+    "age_classification":{
+      "senior_citizen": 60,
+      "super_senior_citizen": 80
+    }
+  
+  }
