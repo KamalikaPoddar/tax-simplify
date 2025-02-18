@@ -1,54 +1,216 @@
 #!/usr/bin/env python3
 
-import math
+from datetime import datetime, date
+from decimal import Decimal
 import json
-from flask import Flask, request, jsonify
+import logging
+import re
+from http import HTTPStatus
+import decimal
+from decimal import Decimal
+from typing import Optional, List, Dict, Any, Union, Tuple
+import os
+from io import BytesIO
+
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
-from pydantic import BaseModel
-from typing import Optional
+from pydantic import BaseModel, validator, ValidationError
 
 app = Flask(__name__)
 CORS(app)
 
+class TaxInput(BaseModel):
+    income: Decimal
+    age: int
+    gender: str
+    city: str
+    rent: Decimal
+    has_hra: bool
+    basic_salary: Decimal = Decimal("0.0")
+    hra_received: Decimal = Decimal("0.0")
+    property_self_occupied: bool = False
+    home_loan_interest: Decimal = Decimal("0.0")
+    home_loan_principal_80c: Decimal = Decimal("0.0")
+    sec_80ee: bool = False
+    sec_80eea: bool = False
+    total_80c_investments: Decimal = Decimal("0.0")
+    nps_80ccd_1b: Decimal = Decimal("0.0")
+    health_insurance_self_parents: Decimal = Decimal("0.0")
+    is_disabled_self: bool = False
+    is_disabled_dependent: bool = False
+    severe_disability_self: bool = False
+    severe_disability_dep: bool = False
+    critical_illness_bills: Decimal = Decimal("0.0")
+    student_loan_interest: Decimal = Decimal("0.0")
+    donations_80g: Decimal = Decimal("0.0")
+    royalty_income_80rrb: Decimal = Decimal("0.0")
+    is_startup_investments: bool = False
+    startup_investments_80iac: Decimal = Decimal("0.0")
+    cooperative_society_80p: Decimal = Decimal("0.0")
+    number_of_new_employees_80jjaa: int = 0
+    new_employees_wages: Decimal = Decimal("0.0")
+    deduction_from_scientific_research: Decimal = Decimal("0.0")
+    is_exempted_under_80gge: bool = False
+    savings_interest_80tta: Decimal = Decimal("0.0")
+    interest_income_80ttb: Decimal = Decimal("0.0")
+    donation_100pct_no_limit: Decimal = Decimal("0.0")
+    donation_50pct_no_limit: Decimal = Decimal("0.0")
+    donation_100pct_with_limit: Decimal = Decimal("0.0")
+    donation_50pct_with_limit: Decimal = Decimal("0.0")
+    nps_80ccd1: Decimal = Decimal("0.0")
+    employer_nps_80ccd2: Decimal = Decimal("0.0")
+    rent_paid_80gg: Decimal = Decimal("0.0")
+    medical_treatment_80ddb: Decimal = Decimal("0.0")
+    tax_rate: Decimal = Decimal("0.30")
+    assessment_year: str = "2023-24"
+    first_time_home_buyer: bool = False
+
+    @validator('income')
+    def income_must_be_positive(cls, v):
+        if v < 0:
+            raise ValueError('Income must be non-negative')
+        return v
+
+    @validator('age')
+    def age_must_be_valid(cls, v):
+        if not 0 <= v <= 120:
+            raise ValueError('Age must be within a reasonable range (0-120)')
+        return v
+
+    @validator('city')
+    def city_must_be_valid(cls, v):
+        tax_data = load_tax_slabs()
+        if tax_data:
+            allowed_cities = tax_data.get('city_classification', {}).get('metro', []) + tax_data.get('city_classification', {}).get('non-metro', [])
+            if allowed_cities and v.lower() not in [city.lower() for city in allowed_cities]:
+                raise ValueError(f'City must be one of: {", ".join(allowed_cities)}')
+        return v
+
+class TaxDataNotFoundError(Exception):
+    """Custom exception for when tax data is not found."""
+    pass
+
+class InvalidTaxSlabsStructureError(Exception):
+    """Custom exception for invalid tax slabs structure."""
+    pass
+
+def load_tax_slabs():
+    """Loads tax slabs and configurations from tax_slabs.json."""
+    try:
+        with open('tax_slabs.json', 'r') as f:
+            tax_data = json.load(f)
+        return tax_data
+    except FileNotFoundError:
+        logger.error("Tax slabs file 'tax_slabs.json' not found.")
+        raise TaxDataNotFoundError("Tax configuration file not found.")
+    except json.JSONDecodeError:
+        logger.error("Error decoding JSON from 'tax_slabs.json'.")
+        raise InvalidTaxSlabsStructureError("Invalid JSON format in tax configuration file.")
+    except Exception as e:
+        logger.error(f"Unexpected error loading tax slabs: {e}")
+        raise TaxDataNotFoundError(f"Failed to load tax configuration: {e}")
+
+def get_tax_slabs(assessment_year: str, regime_type: str, age: Optional[int] = None):
+    """Retrieves tax slabs based on assessment year, regime type, and age."""
+    tax_data = load_tax_slabs()
+    year_data = tax_data.get(assessment_year, {})
+    regime_data = year_data.get(f"{regime_type}_regime", {})
+
+    if regime_type == 'old':
+        if age is not None:
+            if age > 80:
+                return regime_data.get('super_senior_citizen', [])
+            elif age >= 60:
+                return regime_data.get('senior_citizen', [])
+        return regime_data.get('general', [])
+    elif regime_type == 'new_regime':
+        return regime_data.get('general', [])
+    return []
+
+def get_surcharge_rates(assessment_year: str):
+    """Retrieves surcharge rates for a given assessment year."""
+    tax_data = load_tax_slabs()
+    year_data = tax_data.get(assessment_year, {})
+    regime_data = year_data.get('old_regime', {})
+    return regime_data.get('surcharge', {})
+
+def get_rebate_87a(assessment_year: str):
+    """Retrieves rebate 87A details for a given assessment year."""
+    tax_data = load_tax_slabs()
+    year_data = tax_data.get(assessment_year, {})
+    return year_data.get('rebate_87A')
+
+def get_standard_deduction(assessment_year: str):
+    """Retrieves standard deduction for a given assessment year."""
+    tax_data = load_tax_slabs()
+    year_data = tax_data.get(assessment_year, {})
+    return year_data.get('standard_deduction')
+
+def get_80D_limits(assessment_year: str, age: int):
+    """Retrieves 80D deduction limits for a given assessment year and age."""
+    tax_data = load_tax_slabs()
+    year_data = tax_data.get(assessment_year, {})
+    limits_80d = year_data.get('section_80d_limits', {})
+
+    if age >= 60:
+        return limits_80d.get('senior_citizen')
+    else:
+        return limits_80d.get('general')
+
+def calculate_section24b_deduction(home_loan_interest: Decimal, property_self_occupied: bool) -> Decimal:
+    """Calculate deduction under Section 24b for home loan interest."""
+    if not home_loan_interest:
+        return Decimal("0")
+    
+    if property_self_occupied:
+        return min(home_loan_interest, Decimal("200000"))
+    return home_loan_interest
+
+def calculate_80eea_deduction(first_time_home_buyer: bool, home_loan_interest: Decimal) -> Decimal:
+    """Calculate deduction under Section 80EEA for first-time home buyers."""
+    if not first_time_home_buyer or not home_loan_interest:
+        return Decimal("0")
+    
+    return min(home_loan_interest, Decimal("150000"))
+
 def calculate_old_regime_tax(
-    income: float,
+    income: Decimal,
     age: int,
     gender: str,
     city: str,
-    rent: float,
+    rent: Decimal,
     has_hra: bool,
-    basic_salary: float = 0.0,
-    hra_received: float = 0.0,
+    basic_salary: Decimal = Decimal("0.0"),
+    hra_received: Decimal = Decimal("0.0"),
     property_self_occupied: bool = False,
-    home_loan_interest: float = 0.0,
-    home_loan_principal_80c: float = 0.0,
+    home_loan_interest: Decimal = Decimal("0.0"),
+    home_loan_principal_80c: Decimal = Decimal("0.0"),
     sec_80ee: bool = False,
     sec_80eea: bool = False,
-    total_80c_investments: float = 0.0,
-    nps_80ccd_1b: float = 0.0,
-    health_insurance_self_parents: float = 0.0,
+    total_80c_investments: Decimal = Decimal("0.0"),
+    nps_80ccd_1b: Decimal = Decimal("0.0"),
+    health_insurance_self_parents: Decimal = Decimal("0.0"),
     is_disabled_self: bool = False,
     is_disabled_dependent: bool = False,
     severe_disability_self: bool = False,
     severe_disability_dep: bool = False,
-    critical_illness_bills: float = 0.0,
-    student_loan_interest: float = 0.0,
-    donations_80g: float = 0.0,
-    # placeholders
-    royalty_income_80rrb: float = 0.0,
+    critical_illness_bills: Decimal = Decimal("0.0"),
+    student_loan_interest: Decimal = Decimal("0.0"),
+    donations_80g: Decimal = Decimal("0.0"),
+    royalty_income_80rrb: Decimal = Decimal("0.0"),
     is_startup_investments: bool = False,
-    startup_investments_80iac: float = 0.0,
-    cooperative_society_80p: float = 0.0,
+    startup_investments_80iac: Decimal = Decimal("0.0"),
+    cooperative_society_80p: Decimal = Decimal("0.0"),
     number_of_new_employees_80jjaa: int = 0,
-    new_employees_wages_80jjaa: float = 0.0,
-    deduction_from_scientific_research: float = 0.0,
+    new_employees_wages: Decimal = Decimal("0.0"),
+    deduction_from_scientific_research: Decimal = Decimal("0.0"),
     is_exempted_under_80gge: bool = False,
-    savings_interest_80tta: float = 0.0,
-    interest_income_80ttb: float = 0.0,
-    donation_100pct_no_limit: float = 0.0,
-    donation_50pct_no_limit: float = 0.0,
-    donation_100pct_with_limit: float = 0.0,
-    donation_50pct_with_limit: float = 0.0
+    savings_interest_80tta: Decimal = Decimal("0.0"),
+    interest_income_80ttb: Decimal = Decimal("0.0"),
+    donation_100pct_no_limit: Decimal = Decimal("0.0"),
+    donation_50pct_no_limit: Decimal = Decimal("0.0"),
+    donation_100pct_with_limit: Decimal = Decimal("0.0"),
+    donation_50pct_with_limit: Decimal = Decimal("0.0")
 ):
     """
     Returns:
@@ -270,8 +432,8 @@ def calculate_old_regime_tax(
 
     # k) 80JJAA - new employees
     jj_used=0.0
-    if taxable_income>0 and number_of_new_employees_80jjaa>0 and new_employees_wages_80jjaa>0:
-        ded_jj= 0.30* new_employees_wages_80jjaa
+    if taxable_income>0 and number_of_new_employees_80jjaa>0 and new_employees_wages>0:
+        ded_jj= 0.30* new_employees_wages
         if ded_jj> taxable_income:
             ded_jj=taxable_income
         taxable_income-=ded_jj
@@ -347,9 +509,9 @@ def calculate_old_regime_tax(
 
 
 def calculate_new_regime_tax(
-    income: float,
+    income: Decimal,
     gender: str,
-    basic_salary: float = 0.0
+    basic_salary: Decimal = Decimal("0.0")
 ) -> tuple[float, float]:
     """
     Same logic as you provided. Returns (tax, taxable_income).
@@ -614,117 +776,220 @@ def run_tax_calculator():
     print("\n--- End of Calculation ---")
 
 
+def calculate_tax_from_slabs(taxable_income: Decimal, tax_slabs: List[Dict[str, Union[Decimal, float, None]]]) -> Decimal:
+    """Calculates tax from income and tax slabs."""
+    tax_amount = Decimal('0.00')
+    last_limit = Decimal('0.00')
+
+    for slab in tax_slabs:
+        limit = slab.get('limit')
+        rate = Decimal(str(slab.get('rate', 0)))
+
+        if limit is None:  # Last slab with no upper limit
+            taxable_amount_in_slab = max(0, taxable_income - last_limit)
+        else:
+            slab_limit = Decimal(str(limit))
+            taxable_amount_in_slab = max(0, min(taxable_income, slab_limit) - last_limit)
+            last_limit = slab_limit
+
+        tax_amount += taxable_amount_in_slab * rate
+
+    return tax_amount
+
+def calculate_tax_for_income(taxable_income: Decimal, assessment_year: str, age: Optional[int] = None):
+    try:
+        slabs = get_tax_slabs(assessment_year, 'old', age)
+        if not slabs:
+            logger.warning("No tax slabs found, using default slabs")
+            slabs = [
+                {"limit": Decimal("250000"), "rate": 0},
+                {"limit": Decimal("500000"), "rate": 0.05},
+                {"limit": Decimal("1000000"), "rate": 0.20},
+                {"limit": None, "rate": 0.30}
+            ]
+
+        tax = calculate_tax_from_slabs(taxable_income, slabs)
+
+        rebate_87a = get_rebate_87a(assessment_year)
+        if rebate_87a:
+            rebate_limit = Decimal(str(rebate_87a['limit']))
+            income_threshold = Decimal(str(rebate_87a['income_threshold']))
+            if taxable_income <= income_threshold:
+                tax = max(Decimal("0"), tax - rebate_limit)
+
+        return tax.quantize(Decimal("0.01"))
+    except Exception as e:
+        logger.error("Error calculating tax for income: %s", str(e))
+        return Decimal("0")
+
+def generate_optimization_suggestions(input_data: TaxInput, old_breakdown: Dict[str, Any], assessment_year: str, age: int, tax_data: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Generates more personalized optimization suggestions."""
+    suggestions: List[Dict[str, Any]] = []
+    taxable_income = input_data.income
+
+    default_tax_bracket = Decimal("0.3")
+    tax_bracket = Decimal(str(tax_data.get('default_tax_bracket', default_tax_bracket))) if tax_data and 'default_tax_bracket' in tax_data else default_tax_bracket
+
+    # 80C Suggestion
+    if "80c" in old_breakdown and old_breakdown["80c"]["remaining_capacity"] != "Check with applicable limits":
+        remaining = Decimal(str(old_breakdown["80c"]["remaining_capacity"])) if old_breakdown["80c"]["remaining_capacity"] is not None else Decimal("0")
+        potential_tax_saving = Decimal(old_breakdown["80c"]["estimated_tax_saving_if_fully_used"]) if old_breakdown["80c"]["estimated_tax_saving_if_fully_used"] != "Check applicable limits" else Decimal("0")
+
+        suggestions.append({
+            "deduction": "80C",
+            "current_investment": str(input_data.total_80c_investments),
+            "recommended_investment": str(input_data.total_80c_investments + remaining),
+            "potential_tax_saving": str(potential_tax_saving.quantize(Decimal("0.00"))),
+            "action": f"Invest an additional ₹{remaining} in ELSS/PPF/NSC. Consider a mix of ELSS (for growth) and PPF (for safety)."
+        })
+
+    # 80D Suggestion
+    if "80d_health_insurance" in old_breakdown and old_breakdown["80d_health_insurance"]["remaining_capacity"] != "Check with applicable limits":
+        remaining = Decimal(old_breakdown["80d_health_insurance"]["remaining_capacity"])
+        potential_tax_saving = Decimal(old_breakdown["80d_health_insurance"]["estimated_tax_saving_if_fully_used"]) if old_breakdown["80d_health_insurance"]["estimated_tax_saving_if_fully_used"] != "Check applicable limits" else Decimal("0")
+
+        suggestions.append({
+            "deduction": "80D_Health_Insurance",
+            "current_investment": str(Decimal(old_breakdown["80d_health_insurance"]["used"])),
+            "recommended_investment": str(remaining),
+            "potential_tax_saving": str(potential_tax_saving),
+            "action": f"Purchase additional health insurance for yourself/family/parents to utilize the remaining 80D limit of ₹{remaining} and save up to ₹{potential_tax_saving} in taxes."
+        })
+
+    # Home Loan Suggestions
+    if input_data.home_loan_interest > 0:
+        if input_data.first_time_home_buyer:
+            suggestions.append({
+                "deduction": "80EEA",
+                "current_investment": str(input_data.home_loan_interest),
+                "potential_tax_saving": "Up to ₹150,000 additional deduction",
+                "action": "As a first-time home buyer, you can claim up to ₹150,000 additional deduction under Section 80EEA"
+            })
+        else:
+            suggestions.append({
+                "deduction": "24b_Home_Loan",
+                "current_investment": str(input_data.home_loan_interest),
+                "potential_tax_saving": "Up to ₹200,000 for self-occupied property",
+                "action": "You can claim up to ₹200,000 deduction on home loan interest under Section 24b for self-occupied property"
+            })
+
+    return suggestions
+
 @app.route('/api/calculateTax', methods=['POST'])
 def calculate_tax():
+    """Calculate tax for both old and new regimes."""
     try:
-        data = request.json
-        print("Received data:", data)  # Debug print
-        
-        # Calculate deductions
-        deductions = {
-            '80C': min(data.get('total_80c_investments', 0), 150000),
-            '80CCD(1B)': min(data.get('nps_80ccd_1b', 0), 50000),
-            '80D': calculate_80d_deduction(
-                age=data['age'],
-                health_insurance_self=data.get('health_insurance_self', 0),
-                health_checkup_self=data.get('health_checkup_self', 0),
-                age_parents=data.get('age_parents', 0),
-                health_insurance_parents=data.get('health_insurance_parents', 0),
-                health_checkup_parents=data.get('health_checkup_parents', 0)
-            ),
-            'Home Loan Interest': data.get('home_loan_interest', 0),
-            'Student Loan Interest': data.get('student_loan_interest', 0)
-        }
-        print("Calculated deductions:", deductions)  # Debug print
-        
-        # Calculate taxes under both regimes
+        data = request.get_json()
+        logger.info("Received tax calculation request with data: %s", data)
+        input_data = TaxInput(**data)
+
+        tax_data = load_tax_slabs()
+        if not tax_data:
+            return jsonify({'status': 'error', 'message': 'Tax data not found'}), HTTPStatus.INTERNAL_SERVER_ERROR
+
+        default_tax_bracket = Decimal("0.3")
+        tax_bracket = Decimal(str(tax_data.get('default_tax_bracket', default_tax_bracket))) if tax_data and 'default_tax_bracket' in tax_data else default_tax_bracket
+
+        # Old Regime Calculations
         old_tax, old_ti, old_breakdown = calculate_old_regime_tax(
-            income=data['income'],
-            age=data['age'],
-            gender=data['gender'],
-            city=data['city'],
-            rent=data['rent'],
-            has_hra=data['has_hra'],
-            basic_salary=data['basic_salary'],
-            hra_received=data['hra_received'],
-            property_self_occupied=data['property_self_occupied'],
-            home_loan_interest=data['home_loan_interest'],
-            home_loan_principal_80c=data['home_loan_principal_80c'],
-            sec_80ee=data['sec_80ee'],
-            sec_80eea=data['sec_80eea'],
-            total_80c_investments=data['total_80c_investments'],
-            nps_80ccd_1b=data['nps_80ccd_1b'],
-            health_insurance_self_parents=data['health_insurance_self_parents'],
-            is_disabled_self=data['is_disabled_self'],
-            is_disabled_dependent=data['is_disabled_dependent'],
-            severe_disability_self=data['severe_disability_self'],
-            severe_disability_dep=data['severe_disability_dep'],
-            critical_illness_bills=data['critical_illness_bills'],
-            student_loan_interest=data['student_loan_interest'],
-            donations_80g=data['donations_80g'],
-            royalty_income_80rrb=data['royalty_income_80rrb'],
-            deduction_from_scientific_research=data['deduction_from_scientific_research'],
-            is_startup_investments=data['is_startup_investments'],
-            startup_investments_80iac=data['startup_investments_80iac'],
-            cooperative_society_80p=data['cooperative_society_80p'],
-            number_of_new_employees_80jjaa=data['number_of_new_employees_80jjaa'],
-            new_employees_wages_80jjaa=data['new_employees_wages_80jjaa'],
-            is_exempted_under_80gge=data['is_exempted_under_80gge'],
-            savings_interest_80tta=data['savings_interest_80tta'],
-            interest_income_80ttb=data['interest_income_80ttb']
+            input_data=input_data,
+            tax_data=tax_data
         )
-        print("Calculated old regime tax:", old_tax, old_ti, old_breakdown)  # Debug print
+
+        # New Regime Calculations
         new_tax, new_ti = calculate_new_regime_tax(
-            income=data['income'],
-            gender=data['gender'],
-            basic_salary=data['basic_salary']
+            income=input_data.income,
+            gender=input_data.gender,
+            basic_salary=input_data.basic_salary,
+            assessment_year=input_data.assessment_year
         )
-        print("Calculated new regime tax:", new_tax, new_ti)  # Debug print
-        
-        # Determine optimal regime
-        optimal_regime = "Old Regime" if old_tax < new_tax else "New Regime"
-        
-        # Prepare response
+
+        total_potential_tax_saving = Decimal("0.0")
+        for key, val in old_breakdown.items():
+            if 'estimated_tax_saving_if_fully_used' in val:
+                estimated_tax_saving = Decimal(val['estimated_tax_saving_if_fully_used']) if val['estimated_tax_saving_if_fully_used'] != "Check applicable limits" else Decimal("0")
+                if isinstance(estimated_tax_saving, (int, float, str)):
+                    estimated_tax_saving = Decimal(str(estimated_tax_saving))
+                total_potential_tax_saving += estimated_tax_saving
+
+        optimal_old_tax = (old_tax - total_potential_tax_saving).quantize(Decimal("0.01"))
+        optimal_regime = "old_regime" if optimal_old_tax < new_tax else "new_regime"
+
+        def to_snake_case(text):
+            return re.sub(r'(?<!^)(?=[A-Z])', '_', text).lower()
+
+        optimization_suggestions = generate_optimization_suggestions(input_data, old_breakdown, input_data.assessment_year, input_data.age, tax_data)
+
         response = {
+            'status': 'success',
             'optimal_regime': optimal_regime,
             'old_regime': {
-                'tax': old_tax,
-                'taxable_income': old_ti,
+                'tax': "{:.2f}".format(float(old_tax)),
+                'taxable_income': "{:.2f}".format(float(old_ti)),
+                'optimal_tax': "{:.2f}".format(float(optimal_old_tax)),
+                'total_potential_tax_saving': str(int(total_potential_tax_saving)),
                 'deduction_breakdown': {
-                    k: {
-                        'used': v,
-                        'limit': 150000 if k == '80C' else 50000 if k == '80CCD(1B)' else 75000 if k == '80D' else None,
-                        'remaining_capacity': (150000 - v) if k == '80C' else (50000 - v) if k == '80CCD(1B)' else (75000 - v) if k == '80D' else None,
-                        'estimated_tax_saving_if_fully_used': v * 0.3,
-                        'tax_saved_from_used_approx': v * 0.3
-                    } for k, v in deductions.items()
+                    to_snake_case(k): {
+                        'used': "{:.2f}".format(float(v['used'])),
+                        'limit': str(v['limit']) if v['limit'] is not None else None,
+                        'remaining_capacity': str(int(v['remaining_capacity'])) if v['remaining_capacity'] is not None else None,
+                        'estimated_tax_saving_if_fully_used': "{:.2f}".format(float(v['estimated_tax_saving_if_fully_used'])),
+                        'tax_saved_from_used_approx': "{:.2f}".format(float(v['tax_saved_from_used_approx']))
+                    } for k, v in old_breakdown.items()
                 }
             },
             'new_regime': {
-                'tax': new_tax,
-                'taxable_income': new_ti
+                'tax': "{:.2f}".format(float(new_tax)),
+                'taxable_income': "{:.2f}".format(float(new_ti)),
+                'standard_deduction': "{:.1f}".format(float(get_standard_deduction(input_data.assessment_year) or 50000.0))
             },
-            'optimization_suggestions': {
-                '80C': {
-                    'current': deductions['80C'],
-                    'proposed': 150000
-                },
-                '80CCD(1B)': {
-                    'current': deductions['80CCD(1B)'],
-                    'proposed': 50000
-                },
-                '80D - Health Insurance': {
-                    'current': deductions['80D'],
-                    'proposed': 75000
-                }
-            }
+            'optimization_suggestions': optimization_suggestions,
+            'assessment_year': input_data.assessment_year
         }
-        
-        return jsonify(response)
-        
+
+        logger.info("Successfully calculated tax for both regimes")
+        return jsonify(response), HTTPStatus.OK
+
+    except ValidationError as e:
+        logger.error("Validation error in tax calculation request: %s", e.errors())
+        return jsonify({
+            'status': 'error',
+            'error_type': 'validation_error',
+            'message': 'Invalid input data',
+            'details': e.errors()
+        }), HTTPStatus.BAD_REQUEST
+
+    except TaxDataNotFoundError as e:
+        logger.error("Tax data not found: %s", str(e))
+        return jsonify({
+            'status': 'error',
+            'error_type': 'tax_data_error',
+            'message': str(e)
+        }), HTTPStatus.INTERNAL_SERVER_ERROR
+
+    except InvalidTaxSlabsStructureError as e:
+        logger.error("Invalid tax slabs structure: %s", str(e))
+        return jsonify({
+            'status': 'error',
+            'error_type': 'tax_slabs_error',
+            'message': str(e)
+        }), HTTPStatus.INTERNAL_SERVER_ERROR
+
+    except decimal.InvalidOperation as e:
+        logger.error("Invalid decimal operation: %s", str(e))
+        return jsonify({
+            'status': 'error',
+            'error_type': 'calculation_error',
+            'message': f"Invalid numeric value in calculation: {str(e)}"
+        }), HTTPStatus.INTERNAL_SERVER_ERROR
+
     except Exception as e:
-        print(f"Error in calculate_tax: {str(e)}")  # Add debug logging
-        return jsonify({'error': str(e)}), 500
+        logger.error("Unexpected error in tax calculation: %s", str(e), exc_info=True)
+        return jsonify({
+            'status': 'error',
+            'error_type': 'unexpected_error',
+            'message': f"An unexpected error occurred: {str(e)}"
+        }), HTTPStatus.INTERNAL_SERVER_ERROR
 
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(port=5000, debug=True)

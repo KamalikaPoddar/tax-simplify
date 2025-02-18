@@ -1,4 +1,3 @@
-
 import { useTaxForm } from "@/context/TaxFormContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -52,6 +51,30 @@ export function IncomeDetailsForm({ onNext, onPrevious }: IncomeDetailsFormProps
         </div>
 
         <div className="space-y-2">
+          <Label htmlFor="cityType" className="flex items-center gap-2">
+            <Home className="h-4 w-4 text-purple-600" />
+            What is your City Type?
+          </Label>
+          <Select
+            value={formData.incomeDetails.cityType}
+            onValueChange={(value) =>
+              setFormData((prev) => ({
+                ...prev,
+                incomeDetails: { ...prev.incomeDetails, cityType: value },
+              }))
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select city type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="metro">Metro (Delhi, Mumbai, Kolkata, Chennai)</SelectItem>
+              <SelectItem value="non-metro">Non-Metro</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="hraReceived" className="flex items-center gap-2">
               <Building className="h-4 w-4 text-purple-600"/>
@@ -66,6 +89,7 @@ export function IncomeDetailsForm({ onNext, onPrevious }: IncomeDetailsFormProps
                   incomeDetails: {
                     ...prev.incomeDetails,
                     hraReceived: checked,
+                    ...(checked ? {} : { isOwnedHouse: false }),
                   },
                 }))
               }
@@ -73,51 +97,47 @@ export function IncomeDetailsForm({ onNext, onPrevious }: IncomeDetailsFormProps
           </div>
         </div>
 
-        {formData.incomeDetails.hraReceived && (
-          <>
-            <div className="space-y-2">
-              <Label htmlFor="hraAmount">What is the annual HRA you receive?</Label>
-              <Input
-                id="hraAmount"
-                type="number"
-                value={formData.incomeDetails.hraAmount}
-                onChange={(e) =>
+        {formData.incomeDetails.hraReceived ? (
+          <div className="space-y-2">
+            <Label htmlFor="hraAmount">What is the annual HRA you receive?</Label>
+            <Input
+              id="hraAmount"
+              type="number"
+              value={formData.incomeDetails.hraAmount}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  incomeDetails: {
+                    ...prev.incomeDetails,
+                    hraAmount: Number(e.target.value),
+                  },
+                }))
+              }
+              className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            />
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="isOwnedHouse" className="flex items-center gap-2">
+                <Home className="h-4 w-4 text-purple-600"/>
+                Are you residing in a owned, self-occupied property?
+              </Label>
+              <Switch
+                id="isOwnedHouse"
+                checked={formData.incomeDetails.isOwnedHouse}
+                onCheckedChange={(checked) =>
                   setFormData((prev) => ({
                     ...prev,
                     incomeDetails: {
                       ...prev.incomeDetails,
-                      hraAmount: Number(e.target.value),
+                      isOwnedHouse: checked,
                     },
                   }))
                 }
-                className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               />
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="cityType" className="flex items-center gap-2">
-                <Home className="h-4 w-4 text-purple-600" />
-                What is your City Type?
-              </Label>
-              <Select
-                value={formData.incomeDetails.cityType}
-                onValueChange={(value) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    incomeDetails: { ...prev.incomeDetails, cityType: value },
-                  }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select city type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="metro">Metro (Delhi, Mumbai, Kolkata, Chennai)</SelectItem>
-                  <SelectItem value="non-metro">Non-Metro</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </>
+          </div>
         )}
       </div>
 

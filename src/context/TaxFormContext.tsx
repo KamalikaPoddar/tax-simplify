@@ -23,6 +23,7 @@ const defaultFormData: TaxFormData = {
     hraReceived: false,
     hraAmount: 0,
     cityType: "",
+    isOwnedHouse: false,
   },
   investmentDetails: {
     taxSavingInvestments: 0,

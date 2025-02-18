@@ -12,6 +12,7 @@ export interface IncomeDetails {
   hraReceived: boolean;
   hraAmount: number;
   cityType: string;
+  isOwnedHouse: boolean;
 }
 
 export interface InvestmentDetails {
