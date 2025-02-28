@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState } from "react";
 import { TaxFormData, TaxCalculationResult } from "@/types/tax-calculator";
 
@@ -29,6 +30,8 @@ const defaultFormData: TaxFormData = {
     taxSavingInvestments: 0,
     npsContribution: 0,
     healthInsurance: 0,
+    startup_investments_80iac: 0,
+    deduction_from_scientific_research: 0,
   },
   loanDetails: {
     hasStudentLoan: false,
