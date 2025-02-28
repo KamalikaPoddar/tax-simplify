@@ -1,3 +1,4 @@
+
 export interface PersonalInfo {
   email: string;
   birthDate: string;
@@ -19,6 +20,8 @@ export interface InvestmentDetails {
   taxSavingInvestments: number;
   npsContribution: number;
   healthInsurance: number;
+  startup_investments_80iac: number;
+  deduction_from_scientific_research: number;
 }
 
 export interface LoanDetails {
