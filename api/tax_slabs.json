@@ -1,0 +1,203 @@
+{
+    "2023-24": {
+      "standard_deduction": 50000,
+      "rebate_87A": { "limit": 12500, "income_threshold": 500000 },
+      "old_regime": {
+        "general": [
+          {"limit": 250000, "rate": 0.0},
+          {"limit": 500000, "rate": 0.05},
+          {"limit": 1000000, "rate": 0.20},
+          {"limit": null, "rate": 0.30}
+        ],
+        "senior_citizen": [
+          {"limit": 300000, "rate": 0.0},
+          {"limit": 500000, "rate": 0.05},
+          {"limit": 1000000, "rate": 0.20},
+          {"limit": null, "rate": 0.30}
+        ],
+        "super_senior_citizen": [
+          {"limit": 500000, "rate": 0.0},
+          {"limit": 1000000, "rate": 0.20},
+          {"limit": null, "rate": 0.30}
+        ],
+        "surcharge": {
+          "50000000": 0.10,
+          "100000000": 0.15,
+          "200000000": 0.25,
+          "500000000": 0.37
+        },
+        "health_and_education_cess": 0.04
+      },
+      "new_regime": {
+        "general": [
+          {"limit": 250000, "rate": 0.0},
+          {"limit": 500000, "rate": 0.05},
+          {"limit": 750000, "rate": 0.10},
+          {"limit": 1000000, "rate": 0.15},
+          {"limit": 1250000, "rate": 0.20},
+          {"limit": 1500000, "rate": 0.25},
+          {"limit": null, "rate": 0.30}
+        ],
+        "surcharge": {
+          "50000000": 0.10,
+          "100000000": 0.15,
+          "200000000": 0.25,
+          "500000000": 0.37
+        },
+        "health_and_education_cess": 0.04
+      },
+      "city_classification": {
+        "metro": ["mumbai", "delhi", "chennai", "kolkata", "bangalore", "hyderabad", "pune"],
+        "non-metro": ["ahmedabad", "surat", "jaipur", "lucknow", "nagpur", "coimbatore"]
+       },
+       "default_tax_bracket": 0.30,
+       "section_80d_limits": {
+          "general": {"self": 25000, "parents": 25000},
+          "senior_citizen": {"self": 50000, "parents": 50000}
+       },
+       "deduction_limits": {
+        "80C": {
+          "limit": 150000,
+          "description": "Combined limit for 80C, 80CCC, 80CCD(1), including Home Loan Principal Repayment"
+        },
+        "24b_home_loan_interest_self_occupied": {
+          "limit": 200000,
+          "description": "Limit for Interest on Housing Loan for Self-Occupied Property"
+        },
+        "80eea_home_loan_interest_first_time_buyer": {
+          "limit": 150000,
+          "description": "Additional Interest Deduction for First-Time Home Buyers under 80EEA",
+          "conditions": {
+            "loan_sanction_period": "April 1, 2019 to March 31, 2022",
+            "property_value_limit": 4500000,
+            "loan_amount_limit": 3500000,
+            "first_time_buyer_required": true,
+            "other_property_ownership_restriction": true
+          }
+        }
+      }
+    },
+    "2024-25": {
+      "standard_deduction": 50000,
+      "rebate_87A": { "limit": 25000, "income_threshold": 700000 },
+      "old_regime": {
+        "general": [
+          {"limit": 250000, "rate": 0.0},
+          {"limit": 500000, "rate": 0.05},
+          {"limit": 1000000, "rate": 0.20},
+          {"limit": null, "rate": 0.30}
+        ],
+        "senior_citizen": [
+          {"limit": 300000, "rate": 0.0},
+          {"limit": 500000, "rate": 0.05},
+          {"limit": 1000000, "rate": 0.20},
+          {"limit": null, "rate": 0.30}
+        ],
+        "super_senior_citizen": [
+          {"limit": 500000, "rate": 0.0},
+          {"limit": 1000000, "rate": 0.20},
+          {"limit": null, "rate": 0.30}
+        ],
+        "surcharge": {
+          "50000000": 0.10,
+          "100000000": 0.15,
+          "200000000": 0.25,
+          {"limit": 500000000, "rate": 0.37}
+        },
+        "health_and_education_cess": 0.04
+      },
+      "new_regime": {
+        "general": [
+          {"limit": 300000, "rate": 0.0},
+          {"limit": 600000, "rate": 0.05},
+          {"limit": 900000, "rate": 0.10},
+          {"limit": 1200000, "rate": 0.15},
+          {"limit": 1500000, "rate": 0.20},
+          {"limit": null, "rate": 0.30}
+        ],
+        "surcharge": {
+          "50000000": 0.10,
+          "100000000": 0.15,
+          "200000000": 0.25,
+          {"limit": 500000000, "rate": 0.37}
+        },
+        "health_and_education_cess": 0.04
+      },
+      "city_classification": {
+        "metro": ["metro"],
+        "non-metro": ["non-metro"]
+       },
+       "default_tax_bracket": 0.30,
+       "section_80d_limits": {
+          "general": {"self": 25000, "parents": 25000},
+          "senior_citizen": {"self": 50000, "parents": 50000}
+       },
+       "deduction_limits": {
+        "80C": {
+          "limit": 150000,
+          "description": "Combined limit for 80C, 80CCC, 80CCD(1), including Home Loan Principal Repayment"
+        },
+        "24b_home_loan_interest_self_occupied": {
+          "limit": 200000,
+          "description": "Limit for Interest on Housing Loan for Self-Occupied Property"
+        },
+        "80eea_home_loan_interest_first_time_buyer": {
+          "limit": 150000,
+          "description": "Additional Interest Deduction for First-Time Home Buyers under 80EEA",
+          "conditions": {
+            "loan_sanction_period": "April 1, 2019 to March 31, 2022",
+            "property_value_limit": 4500000,
+            "loan_amount_limit": 3500000,
+            "first_time_buyer_required": true,
+            "other_property_ownership_restriction": true
+          }
+        }
+      }
+    },
+    "2025-26": {
+      "standard_deduction": 50000,
+      "rebate_87A": { "limit": 25000, "income_threshold": 700000 },
+      "old_regime": {
+        "general": [],
+        "senior_citizen": [],
+        "super_senior_citizen": [],
+        "surcharge": {},
+        "health_and_education_cess": 0.04
+      },
+      "new_regime": {
+        "general": [],
+        "surcharge": {},
+        "health_and_education_cess": 0.04
+      },
+      "city_classification": {
+        "metro": [],
+        "non-metro": []
+       },
+       "default_tax_bracket": 0.30,
+       "section_80d_limits": {
+          "general": {},
+          "senior_citizen": {}
+       },
+       "deduction_limits": {
+        "80C": {
+          "limit": 150000,
+          "description": "Combined limit for 80C, 80CCC, 80CCD(1), including Home Loan Principal Repayment"
+        },
+        "24b_home_loan_interest_self_occupied": {
+          "limit": 200000,
+          "description": "Limit for Interest on Housing Loan for Self-Occupied Property"
+        },
+        "80eea_home_loan_interest_first_time_buyer": {
+          "limit": 150000,
+          "description": "Additional Interest Deduction for First-Time Home Buyers under 80EEA",
+          "conditions": {
+            "loan_sanction_period": "April 1, 2019 to March 31, 2022",
+            "property_value_limit": 4500000,
+            "loan_amount_limit": 3500000,
+            "first_time_buyer_required": true,
+            "other_property_ownership_restriction": true
+          }
+        }
+      }
+    }
+  }

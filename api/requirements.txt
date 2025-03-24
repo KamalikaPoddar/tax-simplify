@@ -1,4 +1,10 @@
 flask==2.3.3
 flask-cors==4.0.0
+flask-limiter==3.5.0
+python-dotenv==1.0.0
+pydantic==2.5.2
 pandas==1.5.3
 openpyxl==3.1.2
+cryptography==41.0.7  # For enhanced security features
+PyJWT==2.8.0  # For secure token handling
+gunicorn==21.2.0  # Production WSGI server
